@@ -44,4 +44,12 @@ public class LanguageService {
         parsedLanguage.setId(id);
         return repository.save(parsedLanguage);
     }
+
+
+    @Transactional
+    public void activateOrDeactivateLanguage(Long id, boolean active) {
+        Language language = repository.findById(id).orElseThrow();
+        language.setActive(active);
+        repository.save(language);
+    }
 }

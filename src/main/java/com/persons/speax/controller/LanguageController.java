@@ -70,5 +70,16 @@ public class LanguageController {
 
         return ResponseEntity.ok(language);
     }
+
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Language> activateOrDeactivateLanguage(
+            @PathVariable Long id,
+            @RequestParam boolean setActive
+    ) {
+        service.activateOrDeactivateLanguage(id, setActive);
+        return ResponseEntity.noContent().build();
+    }
+
 }
 
