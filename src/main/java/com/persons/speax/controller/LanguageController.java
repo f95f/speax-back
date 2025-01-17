@@ -21,12 +21,31 @@ public class LanguageController {
         this.service = service;
     }
 
+
+
     @GetMapping
     public ResponseEntity<List<Language>> listLanguages() {
         List<Language> languages = service.listLanguages();
 
         return ResponseEntity.ok(languages);
     }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Language> getLanguage(@PathVariable Long id) {
+        Language language = service.getLanguage(id);
+
+        return ResponseEntity.ok(language);
+    }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteLanguage(@PathVariable Long id) {
+        service.deleteLanguage(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 
     @PostMapping("/add")
     public ResponseEntity<Language> addLanguage(
@@ -38,6 +57,18 @@ public class LanguageController {
         URI uri = uriBuilder.path("api/v1/languages/{id}").buildAndExpand(language.getId()).toUri();
 
         return ResponseEntity.created(uri).body(language);
+    }
+
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Language> updateLanguage(
+            @PathVariable Long id,
+            @RequestBody @Valid LanguageAddindDTO request
+    ) {
+        Language language = service.updateLanguage(id, request);
+
+        return ResponseEntity.ok(language);
     }
 }
 
