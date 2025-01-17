@@ -18,8 +18,8 @@ public class LanguageService {
         this.repository = repository;
     }
 
-    public List<Language> listLanguages() {
-        return repository.findAll();
+    public List<Language> listLanguages(boolean showDeactivated) {
+        return showDeactivated? repository.findAll() : repository.findByActive(true);
     }
 
     @Transactional

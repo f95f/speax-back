@@ -24,8 +24,8 @@ public class LanguageController {
 
 
     @GetMapping
-    public ResponseEntity<List<Language>> listLanguages() {
-        List<Language> languages = service.listLanguages();
+    public ResponseEntity<List<Language>> listLanguages(@RequestParam(defaultValue = "false") boolean showDeactivated) {
+        List<Language> languages = service.listLanguages(showDeactivated);
 
         return ResponseEntity.ok(languages);
     }
