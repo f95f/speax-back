@@ -48,15 +48,15 @@ public class LanguageController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<Language> addLanguage(
-            @RequestBody @Valid LanguageAddindDTO request,
+    public ResponseEntity<List<Language>> addLanguage(
+            @RequestBody @Valid List<LanguageAddindDTO> request,
             UriComponentsBuilder uriBuilder
     ) {
 
-        Language language = service.addLanguage(request);
-        URI uri = uriBuilder.path("api/v1/languages/{id}").buildAndExpand(language.getId()).toUri();
+        List<Language> languages = service.addMultipleLanguages(request);
+        URI uri = uriBuilder.path("api/v1/languages ").buildAndExpand().toUri();
 
-        return ResponseEntity.created(uri).body(language);
+        return ResponseEntity.created(uri).body(languages);
     }
 
 
@@ -83,3 +83,6 @@ public class LanguageController {
 
 }
 
+// TODO next:
+// - add 404 handling
+// - add endpoint to add a list of languages

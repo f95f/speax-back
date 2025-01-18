@@ -4,6 +4,7 @@ import com.persons.speax.dto.LanguageAddindDTO;
 import com.persons.speax.entity.Language;
 import com.persons.speax.repository.LanguageRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,5 +52,13 @@ public class LanguageService {
         Language language = repository.findById(id).orElseThrow();
         language.setActive(active);
         repository.save(language);
+    }
+
+    public List<Language> addMultipleLanguages(@Valid List<LanguageAddindDTO> request) {
+
+        return request.stream()
+                .map(this::addLanguage)
+                .toList();
+
     }
 }
