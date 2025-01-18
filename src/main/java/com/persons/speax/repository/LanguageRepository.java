@@ -10,6 +10,8 @@ import java.util.List;
 public interface LanguageRepository extends JpaRepository<Language, Long> {
 
     List<Language> findByActive(boolean active);
+    List<Language> findByNameContaining(String searchTerm);
 
     boolean existsByName(String name);
+
 }

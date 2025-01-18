@@ -28,8 +28,11 @@ public class LanguageService {
         this.validations = validations;
     }
 
-    public List<Language> listLanguages(boolean showDeactivated) {
-        return showDeactivated? repository.findAll() : repository.findByActive(true);
+    public List<Language> listLanguages(boolean showDeactivated, String searchTerm) {
+        if (searchTerm.isEmpty()) {
+            return showDeactivated? repository.findAll() : repository.findByActive(true);
+        }
+        return repository.findByNameContaining(searchTerm);
     }
 
     @Transactional
