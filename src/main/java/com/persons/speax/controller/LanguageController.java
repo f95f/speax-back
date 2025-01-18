@@ -85,7 +85,3 @@ public class LanguageController {
     }
 
 }
-
-// TODO next:
-// - add 404 handling
-//
