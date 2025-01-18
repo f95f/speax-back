@@ -2,9 +2,13 @@ package com.persons.speax.service;
 
 import com.persons.speax.dto.LanguageAddindDTO;
 import com.persons.speax.entity.Language;
+import com.persons.speax.exception.ApiValidationException;
 import com.persons.speax.repository.LanguageRepository;
+import com.persons.speax.validation.LanguageCreationValidation;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +18,14 @@ import java.util.List;
 public class LanguageService {
 
     private final LanguageRepository repository;
+    private final List<LanguageCreationValidation> validations;
 
-    public LanguageService(LanguageRepository repository) {
+    public LanguageService(
+            LanguageRepository repository,
+            List<LanguageCreationValidation> validations
+    ) {
         this.repository = repository;
+        this.validations = validations;
     }
 
     public List<Language> listLanguages(boolean showDeactivated) {
@@ -26,11 +35,14 @@ public class LanguageService {
     @Transactional
     public Language addLanguage(LanguageAddindDTO language) {
         Language parsedLanguage = new Language(language.name());
+
+        validations.forEach(validation -> validation.validate(parsedLanguage));
         return repository.save(parsedLanguage);
     }
 
     public Language getLanguage(Long id) {
-        return repository.findById(id).orElseThrow();
+        return repository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Language not found"));
     }
 
     @Transactional
@@ -49,7 +61,7 @@ public class LanguageService {
 
     @Transactional
     public void activateOrDeactivateLanguage(Long id, boolean active) {
-        Language language = repository.findById(id).orElseThrow();
+        Language language = this.getLanguage(id);
         language.setActive(active);
         repository.save(language);
     }

@@ -10,4 +10,6 @@ import java.util.List;
 public interface LanguageRepository extends JpaRepository<Language, Long> {
 
     List<Language> findByActive(boolean active);
+
+    boolean existsByName(String name);
 }

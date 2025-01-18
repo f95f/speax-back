@@ -54,7 +54,7 @@ public class LanguageController {
     ) {
 
         List<Language> languages = service.addMultipleLanguages(request);
-        URI uri = uriBuilder.path("api/v1/languages ").buildAndExpand().toUri();
+        URI uri = uriBuilder.path("api/v1/languages x").buildAndExpand().toUri();
 
         return ResponseEntity.created(uri).body(languages);
     }
@@ -85,4 +85,4 @@ public class LanguageController {
 
 // TODO next:
 // - add 404 handling
-// - add endpoint to add a list of languages
+//
