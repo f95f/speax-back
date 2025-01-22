@@ -98,6 +98,16 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<version>10.20.1</version>
+				<configuration>
+					<url>jdbc:mysql://localhost:3306/db_speax</url>
+					<user>root</user>
+					<password>senha</password>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 

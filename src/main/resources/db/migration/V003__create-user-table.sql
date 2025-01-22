@@ -1,5 +1,5 @@
 create table user (
-    id bigint primary key auto_incrementt a,
+    id bigint primary key auto_increment,
     name varchar(255) unique not null,
     email varchar(255) unique not null,
     password varchar(255) not null,

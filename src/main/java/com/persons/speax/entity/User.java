@@ -1,5 +1,6 @@
 package com.persons.speax.entity;
 
+import com.persons.speax.dto.UserCreatingDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,6 +39,18 @@ public class User {
 
     @Column(columnDefinition = "boolean default false")
     private boolean active;
+
+
+    public User(UserCreatingDTO userCreatingDTO) {
+        this.name = userCreatingDTO.name();
+        this.email = userCreatingDTO.email();
+        this.password = userCreatingDTO.password();
+        this.birthDate = userCreatingDTO.birthdate();
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
+        this.active = false;
+    }
+
 
     @PrePersist
     protected void onCreate() {
