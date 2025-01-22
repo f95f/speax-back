@@ -1,6 +1,7 @@
 package com.persons.speax.service;
 
 import com.persons.speax.dto.UserCreatingDTO;
+import com.persons.speax.dto.UserUpdatingDTO;
 import com.persons.speax.entity.Language;
 import com.persons.speax.entity.User;
 import com.persons.speax.repository.UserRepository;
@@ -37,13 +38,16 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser() {
-        // update user
+    public User updateUser(UserUpdatingDTO user, Long id) {
+        User parsedUser = new User(user);
+        System.out.println("\n\n" + parsedUser + "\n\n");
+        parsedUser.setId(id);
+        return repository.save(parsedUser);
     }
 
     @Transactional
-    public void deleteUser() {
-        // delete user
+    public void deleteUser(Long id) {
+        this.repository.deleteById(id);
     }
 
 }

@@ -22,7 +22,6 @@ public class LanguageController {
     }
 
 
-
     @GetMapping
     public ResponseEntity<List<Language>> listLanguages(
             @RequestParam(defaultValue = "false") boolean showDeactivated,

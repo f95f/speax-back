@@ -1,6 +1,7 @@
 package com.persons.speax.controller;
 
 import com.persons.speax.dto.UserCreatingDTO;
+import com.persons.speax.dto.UserUpdatingDTO;
 import com.persons.speax.entity.Language;
 import com.persons.speax.entity.User;
 import com.persons.speax.service.UserService;
@@ -44,5 +45,20 @@ public class UserController {
         URI uri = uriBuilder.path("api/v1/users/{id}").buildAndExpand(createdUser.getId()).toUri();
 
         return ResponseEntity.created(uri).body(createdUser);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(
+            @PathVariable Long id,
+            @RequestBody UserUpdatingDTO user
+    ) {
+        User updatedUser = service.updateUser(user, id);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        service.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }

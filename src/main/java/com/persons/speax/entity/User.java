@@ -1,6 +1,7 @@
 package com.persons.speax.entity;
 
 import com.persons.speax.dto.UserCreatingDTO;
+import com.persons.speax.dto.UserUpdatingDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -49,6 +50,12 @@ public class User {
         this.createdAt = new Date();
         this.updatedAt = new Date();
         this.active = false;
+    }
+
+    public User(User user) {
+    }
+
+    public User(UserUpdatingDTO user) {
     }
 
 
