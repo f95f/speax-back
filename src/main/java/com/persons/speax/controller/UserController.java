@@ -28,6 +28,12 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUser(@PathVariable Long id) {
+        User users = service.getUser(id);
+        return ResponseEntity.ok(users);
+    }
+
     @PostMapping("/sign-up")
     public ResponseEntity<User> createUser(
             @RequestBody UserCreatingDTO user,

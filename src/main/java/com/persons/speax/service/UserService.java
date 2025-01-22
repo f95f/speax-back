@@ -1,8 +1,10 @@
 package com.persons.speax.service;
 
 import com.persons.speax.dto.UserCreatingDTO;
+import com.persons.speax.entity.Language;
 import com.persons.speax.entity.User;
 import com.persons.speax.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,16 @@ public class UserService {
 
     public UserService(UserRepository repository) {
         this.repository = repository;
+    }
+
+    public List<User> listUsers() {
+        return repository.findAll();
+    }
+
+    public User getUser(Long id) {
+        return repository.findById(id).orElseThrow(
+            () -> new EntityNotFoundException("User not found")
+        );
     }
 
     @Transactional
@@ -34,11 +46,4 @@ public class UserService {
         // delete user
     }
 
-    public void getUser() {
-        // get user
-    }
-
-    public List<User> listUsers() {
-        return repository.findAll();
-    }
 }
