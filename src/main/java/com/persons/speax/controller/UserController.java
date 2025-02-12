@@ -62,3 +62,9 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 }
+
+
+// TODO:
+// - Implement authentication
+// - Implement a password update endpoint
+// - Implement report count/is banned logic
