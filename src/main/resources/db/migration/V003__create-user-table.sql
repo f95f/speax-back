@@ -6,5 +6,5 @@ create table user (
     birth_date date not null,
     created_at timestamp not null,
     updated_at timestamp not null,
-    active boolean default true
+    active boolean default false
 );
