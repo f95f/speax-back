@@ -1,5 +1,6 @@
 package com.persons.speax.entity;
 
+import com.persons.speax.dto.StartChatDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -24,4 +25,12 @@ public class Chat {
     private LocalDateTime  createdAt;
     private LocalDateTime updatedAt;
     private boolean active;
+
+    public Chat(StartChatDTO request, User inviter, User invitee) {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        this.inviter = inviter;
+        this.invitee = invitee;
+        this.active = false;
+    }
 }

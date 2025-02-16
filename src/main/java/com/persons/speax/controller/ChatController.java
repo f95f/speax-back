@@ -3,6 +3,7 @@ package com.persons.speax.controller;
 import com.persons.speax.dto.StartChatDTO;
 import com.persons.speax.entity.Chat;
 import com.persons.speax.service.ChatService;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,28 +19,30 @@ public class ChatController {
         this.service = service;
     }
 
-    @GetMapping("/list-by-user/{userId}")
+    @GetMapping("/list-by-user")
     public ResponseEntity<List<Chat>> listChatsByUser(
-            @PathVariable Long userId,
             @RequestParam(defaultValue = "false") boolean showActiveOnly
     ) {
-        return service.listChatsByUser(userId, showActiveOnly);
+        List<Chat> chats = service.listChatsByUser(showActiveOnly);
+        return ResponseEntity.ok(chats);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Chat> getChat(@PathVariable Long id) {
-        return service.getChat(id);
+        Chat chat = service.getChat(id);
+        return ResponseEntity.ok(chat);
     }
 
     @PostMapping("/start-chat")
     public ResponseEntity<Chat> startChat(@RequestBody StartChatDTO request) {
-        return service.startChat(request);
+        Chat chat = service.startChat(request);
+        return ResponseEntity.ok(chat);
     }
 
     @PutMapping("/toggle-active-status/{id}")
     public ResponseEntity<Void> toggleActiveStatus(@PathVariable Long id) {
        service.toggleActiveStatus(id);
-        return ResponseEntity.noContent().build();
+       return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")

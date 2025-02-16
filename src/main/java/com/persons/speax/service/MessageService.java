@@ -6,6 +6,7 @@ import com.persons.speax.entity.Chat;
 import com.persons.speax.entity.Message;
 import com.persons.speax.repository.MessageRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ public class MessageService {
 
     private final MessageRepository repository;
     private final EntityManager entityManager;
+
 
     public MessageService(MessageRepository repository, EntityManager entityManager) {
 
@@ -37,7 +39,7 @@ public class MessageService {
         );
     }
 
-
+    @Transactional
     public Message sendMessage(SendMessageDTO request) {
         Chat chat = entityManager.getReference(Chat.class, request.chatId());
 
@@ -49,6 +51,7 @@ public class MessageService {
     }
 
 
+    @Transactional
     public Message updateMessage(Long id, UpdateMessageDTO request) {
 
         Message message = repository.findById(id).orElseThrow(
@@ -59,6 +62,7 @@ public class MessageService {
     }
 
 
+    @Transactional
     public Message translateMessage(Long id, UpdateMessageDTO request) {
 
             Message message = repository.findById(id).orElseThrow(
@@ -68,4 +72,8 @@ public class MessageService {
             return repository.save(message);
     }
 
+    @Transactional
+    public void deleteMessage(Long id) {
+        repository.deleteById(id);
+    }
 }
