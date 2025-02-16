@@ -1,5 +1,6 @@
 package com.persons.speax.entity;
 
+import com.persons.speax.dto.SendMessageDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -23,7 +24,14 @@ public class Message {
 
 
     private String content;
-    private String translated_content;
+    private String translatedContent;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    public Message(SendMessageDTO request, Chat chat) {
+        this.content = request.content();
+        this.chat = chat;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
 }

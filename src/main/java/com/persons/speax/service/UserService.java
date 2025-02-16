@@ -40,7 +40,7 @@ public class UserService {
     @Transactional
     public User updateUser(UserUpdatingDTO user, Long id) {
         User parsedUser = new User(user);
-        System.out.println("\n\n" + parsedUser + "\n\n");
+
         parsedUser.setId(id);
         return repository.save(parsedUser);
     }
