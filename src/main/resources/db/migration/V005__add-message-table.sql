@@ -5,5 +5,5 @@ create table message (
     content text not null,
     translated_content text,
     created_at timestamp not null,
-    updated_at timestamp not null,
+    updated_at timestamp not null
 );
