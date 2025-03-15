@@ -35,24 +35,28 @@ public class UserAuthenticationFilter  extends OncePerRequestFilter {
             FilterChain filterChain)
             throws ServletException, IOException {
 
-        if(!isUriPublic(request.getRequestURI())) {
-
-            String token = retrieveToken(request);
-
-            if(token != null && tokenService.isValid(token)) {
-                String subject = tokenService.getSubject(token);
-                User user = repository.findByEmail(subject).orElseThrow();
-                UserDetailsImpl userDetails = new UserDetailsImpl(user);
-
-                Authentication authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
-
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            } else {
-                throw new RuntimeException("Token not found");
-            }
+        if (isUriPublic(request.getRequestURI())) {
+            // Skip token validation for public URIs.
             filterChain.doFilter(request, response);
+            return;
         }
+
+
+        String token = retrieveToken(request);
+
+        if(token != null && tokenService.isValid(token)) {
+            String subject = tokenService.getSubject(token);
+            User user = repository.findByEmail(subject).orElseThrow();
+            UserDetailsImpl userDetails = new UserDetailsImpl(user);
+
+            Authentication authentication =
+                    new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        } else {
+            throw new RuntimeException("Token not found");
+        }
+        filterChain.doFilter(request, response);
 
     }
 
