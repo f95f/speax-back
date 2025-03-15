@@ -24,7 +24,7 @@ public class TokenService {
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
             return JWT.create()
-                    .withIssuer("API Voll.med")
+                    .withIssuer("API Speax")
                     .withSubject(user.getEmail())
                     .withClaim("id", user.getId())
                     .withExpiresAt(expiresAt())
@@ -42,7 +42,7 @@ public class TokenService {
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
             return JWT.require(algorithm)
-                    .withIssuer("API Voll.med")
+                    .withIssuer("API Speax")
                     .build()
                     .verify(token)
                     .getSubject();

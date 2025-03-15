@@ -3,6 +3,7 @@ package com.persons.speax.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,21 +14,26 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private SecurityFilter securityFilter;
+    private final SecurityFilter securityFilter;
+
+    public SecurityConfig(SecurityFilter securityFilter) {
+        this.securityFilter = securityFilter;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         HttpSecurity httpSecurity = http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        (authorize) -> authorize
-                                .requestMatchers("/sign-in").permitAll()
-//                                .anyRequest().authenticated()
+                .authorizeHttpRequests((authorize) -> authorize
+
+                        .requestMatchers("/sign-in", "/sign-up").permitAll()
+                        .anyRequest().authenticated()
+//                                .anyRequest().permitAll()
                 );
 
         return httpSecurity
@@ -41,19 +47,8 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//            .authorizeHttpRequests(authorize -> authorize
-//                    .anyRequest().permitAll()
-//            )
-//            .csrf(AbstractHttpConfigurer::disable);
-//
-//        return http.build();
-//    }
 }

@@ -19,21 +19,29 @@ import java.io.IOException;
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private TokenService tokenService;
+    private final TokenService tokenService;
+    private final UserRepository repository;
 
-    @Autowired
-    private UserRepository repository;
+    public SecurityFilter(TokenService tokenService, UserRepository repository) {
+        this.tokenService = tokenService;
+        this.repository = repository;
+    }
 
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
-    )
-    throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
+
         String uri = request.getRequestURI();
         String JWTToken = retrieveToken(request);
+
+        // Skip token processing for public endpoints
+//        if (uri.equals("/sign-in") || uri.equals("/sign-up")) {
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
+
 
         if(JWTToken != null) {
             String subject = tokenService.getSubject(JWTToken);
@@ -45,6 +53,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+
 
 
     private String retrieveToken(HttpServletRequest request) {
