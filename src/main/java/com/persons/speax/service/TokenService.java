@@ -5,12 +5,11 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.persons.speax.entity.User;
+import com.persons.speax.entity.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
 
 @Service
 public class TokenService {
@@ -18,15 +17,16 @@ public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret;
 
-    public String generateToken(User user) {;
+    public String generateToken(UserDetailsImpl user) {;
 
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
             return JWT.create()
                     .withIssuer("API Speax")
-                    .withSubject(user.getEmail())
+                    .withSubject(user.getUsername())
                     .withClaim("id", user.getId())
+                    .withIssuedAt(createdAt())
                     .withExpiresAt(expiresAt())
                     .sign(algorithm);
 
@@ -52,6 +52,9 @@ public class TokenService {
         }
     }
 
+    private Instant createdAt() {
+        return ZonedDateTime.now(ZoneId.of("America/Recife")).toInstant();
+    }
 
     private Instant expiresAt() {
         return LocalDateTime
@@ -60,4 +63,7 @@ public class TokenService {
                 .toInstant(ZoneOffset.of("-03:00"));
     }
 
+    public boolean isValid(String token) {
+        return true; // TODO: Implementar
+    }
 }
