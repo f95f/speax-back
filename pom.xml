@@ -90,6 +90,12 @@
 			<version>4.4.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-hibernate5</artifactId>
+			<version>2.18.3</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -97,6 +103,16 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<version>10.20.1</version>
+				<configuration>
+					<url>jdbc:mysql://localhost:3306/db_speax</url>
+					<user>root</user>
+					<password>senha</password>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
