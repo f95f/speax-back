@@ -1,5 +1,6 @@
 package com.persons.speax.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.persons.speax.dto.UserCreatingDTO;
 import com.persons.speax.dto.UserUpdatingDTO;
 import jakarta.persistence.*;
@@ -17,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
 
     @Id

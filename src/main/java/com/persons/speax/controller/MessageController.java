@@ -5,13 +5,14 @@ import com.persons.speax.dto.SendMessageDTO;
 import com.persons.speax.dto.UpdateMessageDTO;
 import com.persons.speax.entity.Message;
 import com.persons.speax.service.MessageService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/messages")
+@RequestMapping("/api/v1/messages")
 public class MessageController {
 
     private final MessageService service;
@@ -33,8 +34,10 @@ public class MessageController {
     }
 
     @PostMapping("/send-message")
-    public ResponseEntity<Message> sendMessage(@RequestBody SendMessageDTO request) {
-        Message message = service.sendMessage(request);
+    public ResponseEntity<Message> sendMessage(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
+            @RequestBody SendMessageDTO request) {
+        Message message = service.sendMessage(request, authHeader);
         return ResponseEntity.ok(message);
     }
 
