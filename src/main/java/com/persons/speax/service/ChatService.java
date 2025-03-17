@@ -45,6 +45,10 @@ public class ChatService {
         User inviter = entityManager.getReference(User.class, request.inviterId());
         User invitee = entityManager.getReference(User.class, request.inviteeId());
 
+        if(inviter == null || invitee == null) {
+            throw new EntityNotFoundException("User not found");
+        }
+
         Chat chat = new Chat(request, inviter, invitee);
         return repository.save(chat);
     }

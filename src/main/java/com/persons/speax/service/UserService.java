@@ -46,7 +46,7 @@ public class UserService {
 
     public User getUser(Long id) {
         return repository.findById(id).orElseThrow(
-            () -> new EntityNotFoundException("User not found")
+            () -> new EntityNotFoundException("User not found.")
         );
     }
 
