@@ -3,6 +3,7 @@ package com.persons.speax.service;
 import com.persons.speax.dto.StartChatDTO;
 import com.persons.speax.entity.Chat;
 import com.persons.speax.entity.User;
+import com.persons.speax.exception.ApiValidationException;
 import com.persons.speax.repository.ChatRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -16,10 +17,19 @@ public class ChatService {
 
     private final ChatRepository repository;
     private final EntityManager entityManager;
+    private final TokenService tokenService;
+    private final UserService userService;
 
-    public ChatService(ChatRepository repository, EntityManager entityManager) {
+    public ChatService(
+            ChatRepository repository,
+            EntityManager entityManager,
+            TokenService tokenService,
+            UserService userService) {
+
         this.entityManager = entityManager;
         this.repository = repository;
+        this.tokenService = tokenService;
+        this.userService = userService;
     }
 
 
@@ -36,6 +46,33 @@ public class ChatService {
         return repository.findById(id).orElseThrow(
             () -> new EntityNotFoundException("Chat not found")
         );
+    }
+
+
+    public void acceptChat(Long chatId, String token) {
+
+        Chat chat = entityManager.getReference(Chat.class, chatId);
+
+        if(chat == null) {
+            throw new EntityNotFoundException("Chat not found with ID: " + chatId);
+        }
+
+        if(chat.isActive()) {
+            throw new ApiValidationException("Chat is already active.");
+        }
+
+        Long userId = tokenService.parseUserId(token);
+        Long inviteeId = chat.getInvitee().getId();
+
+        if(inviteeId == null) {
+            throw new EntityNotFoundException("User not found in chat.");
+        }
+
+        if(!userId.equals(inviteeId)) {
+            throw new ApiValidationException("Only invited users can activate the chat.");
+        }
+
+        toggleActiveStatus(chatId);
     }
 
 

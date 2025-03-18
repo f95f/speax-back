@@ -4,6 +4,7 @@ import com.persons.speax.dto.StartChatDTO;
 import com.persons.speax.entity.Chat;
 import com.persons.speax.service.ChatService;
 import org.apache.coyote.Response;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +49,14 @@ public class ChatController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteChat(@PathVariable Long id) {
         service.deleteChat(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/accept")
+    public ResponseEntity<Void> acceptChat(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
+            @PathVariable Long id) {
+        service.acceptChat(id, authHeader);
         return ResponseEntity.noContent().build();
     }
 
