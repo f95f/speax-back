@@ -51,6 +51,7 @@ public class MessageService {
         );
     }
 
+
     @Transactional
     public Message sendMessage(SendMessageDTO request, String token) {
 
@@ -60,6 +61,14 @@ public class MessageService {
 
         if(chat == null) {
             throw new EntityNotFoundException("Chat not found with ID: " + request.chatId());
+        }
+
+        if(!chat.isActive()) {
+            throw new EntityNotFoundException("Chat is closed");
+        }
+
+        if(chat.getInvitee() != sender && chat.getInviter() != sender) {
+            throw new EntityNotFoundException("User not found in current chat.");
         }
 
         return repository.save(new Message(request, chat, sender));
