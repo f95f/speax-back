@@ -52,11 +52,11 @@ public class ChatController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/accept")
+    @PatchMapping("/accept/{chatId}")
     public ResponseEntity<Void> acceptChat(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
-            @PathVariable Long id) {
-        service.acceptChat(id, authHeader);
+            @PathVariable Long chatId) {
+        service.acceptChat(chatId, authHeader);
         return ResponseEntity.noContent().build();
     }
 
