@@ -5,10 +5,13 @@ import com.persons.speax.dto.UpdateMessageDTO;
 import com.persons.speax.entity.Chat;
 import com.persons.speax.entity.Message;
 import com.persons.speax.entity.User;
+import com.persons.speax.exception.ApiValidationException;
 import com.persons.speax.repository.MessageRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.antlr.v4.runtime.Token;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -50,6 +53,7 @@ public class MessageService {
         );
     }
 
+
     @Transactional
     public Message sendMessage(SendMessageDTO request, String token) {
 
@@ -58,7 +62,15 @@ public class MessageService {
         User sender = userService.getUser(userId);
 
         if(chat == null) {
-            throw new RuntimeException("Chat not found with ID: " + request.chatId());
+            throw new EntityNotFoundException("Chat not found with ID: " + request.chatId());
+        }
+
+        if(chat.getInvitee() != sender && chat.getInviter() != sender) {
+            throw new ApiValidationException("User not found in current chat.");
+        }
+
+        if(!chat.isActive()) {
+            throw new ApiValidationException("Chat is closed");
         }
 
         return repository.save(new Message(request, chat, sender));
@@ -69,7 +81,7 @@ public class MessageService {
     public Message updateMessage(Long id, UpdateMessageDTO request) {
 
         Message message = repository.findById(id).orElseThrow(
-            () -> new RuntimeException("Message not found")
+            () -> new EntityNotFoundException("Message not found")
         );
         message.setContent(request.content());
         return repository.save(message);

@@ -29,6 +29,9 @@ public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret;
 
+    @Value("${api.security.token.expires-in}")
+    private int expiresIn;
+
     public String generateToken(UserDetailsImpl user) {;
 
         try {
@@ -39,7 +42,7 @@ public class TokenService {
                     .withSubject(user.getUsername())
                     .withClaim("id", user.getId())
                     .withIssuedAt(createdAt())
-                    .withExpiresAt(expiresAt())
+                    .withExpiresAt(createdAt().plusSeconds(expiresIn))
                     .sign(algorithm);
 
         } catch (JWTCreationException exception){
@@ -89,12 +92,12 @@ public class TokenService {
         return ZonedDateTime.now(ZoneId.of("America/Recife")).toInstant();
     }
 
-    private Instant expiresAt() {
-        return LocalDateTime
-                .now()
-                .plusHours(1)
-                .toInstant(ZoneOffset.of("-03:00"));
-    }
+//    private Instant expiresAt() {
+//        return LocalDateTime
+//                .now()
+//                .plusHours(1)
+//                .toInstant(ZoneOffset.of("-03:00"));
+//    }
 
     public boolean isValid(String token) {
         return true; // TODO: Implementar
