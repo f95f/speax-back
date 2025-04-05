@@ -37,6 +37,10 @@ public class User {
     @Column(nullable = false)
     private Date birthDate;
 
+    @Transient
+    @JsonIgnoreProperties
+    private Number age;
+
     @Column(updatable = false)
     private Date createdAt;
 

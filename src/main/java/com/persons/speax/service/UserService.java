@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -40,11 +41,23 @@ public class UserService {
 
     }
 
+
     public List<User> listUsers() {
-        return repository.findAll();
+        List<User> users = repository.findAll();
+        Date currentDate = new Date();
+
+        users = users.stream().peek(user -> {
+            long ageInMillis = currentDate.getTime() - user.getBirthDate().getTime();
+            int age = (int) (ageInMillis / (1000L * 60 * 60 * 24 * 365));
+            user.setAge(age);
+        }).toList();
+
+        return users;
     }
 
+
     public User getUser(Long id) {
+
         return repository.findById(id).orElseThrow(
             () -> new EntityNotFoundException("User not found.")
         );
