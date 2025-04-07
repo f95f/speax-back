@@ -22,9 +22,10 @@ public class ChatController {
 
     @GetMapping("/list-by-user")
     public ResponseEntity<List<Chat>> listChatsByUser(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
             @RequestParam(defaultValue = "false") boolean showActiveOnly
     ) {
-        List<Chat> chats = service.listChatsByUser(showActiveOnly);
+        List<Chat> chats = service.listChatsByUser(authHeader, showActiveOnly);
         return ResponseEntity.ok(chats);
     }
 
@@ -59,6 +60,4 @@ public class ChatController {
         service.acceptChat(chatId, authHeader);
         return ResponseEntity.noContent().build();
     }
-
-
 }

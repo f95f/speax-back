@@ -33,12 +33,14 @@ public class ChatService {
     }
 
 
-    public List<Chat> listChatsByUser(boolean showActiveOnly) {
+    public List<Chat> listChatsByUser(String token, boolean showActiveOnly) {
+        Long userId = tokenService.parseUserId(token);
+
         if(showActiveOnly) {
-            return repository.findByActiveTrue();
+            return repository.findByUserAndActiveTrue(userId);
         }
 
-        return repository.findAll();
+        return repository.findAllByUser(userId);
     }
 
 
@@ -76,6 +78,7 @@ public class ChatService {
     }
 
 
+
     @Transactional
     public Chat startChat(StartChatDTO request) {
 
@@ -89,6 +92,8 @@ public class ChatService {
         Chat chat = new Chat(request, inviter, invitee);
         return repository.save(chat);
     }
+
+
 
     @Transactional
     public void toggleActiveStatus(Long id) {
